@@ -1,25 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import { Route, Routes } from "react-router-dom";
+import { useState } from 'react';
 
-function App() {
+import Movies from './components/Movies';
+import LoadingBar from 'react-top-loading-bar';
+import Navbar from './components/Navbar';
+
+const App = () => {
+  const [progress, setProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  // eslint-disable-next-line
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar onSearch={setSearchQuery} />
+      <LoadingBar height={3.5} color="#f11946" progress={progress} />
+      <Routes>
+        <Route path="/" element={<Movies setProgress={setProgress} searchQuery={searchQuery} key="home" type="home" />} />
+      </Routes>
+    </>
   );
-}
+};
 
 export default App;
