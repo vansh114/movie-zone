@@ -10,7 +10,7 @@ const MovieCard = ({ poster, title, year, genres, actors, director, rating, webs
                     position: 'absolute',
                     right: '0'
                 }}>
-                    <span className="badge rounded-pill bg-primary">{rating ? `⭐ ${rating}` : 'NR'}</span>
+                    <span className="badge rounded-pill bg-primary">{rating ? `⭐ ${rating.toFixed(2)}` : 'NR'}</span>
                 </div>
                 <img
                     src={poster || ""}

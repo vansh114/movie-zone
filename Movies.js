@@ -6,58 +6,22 @@ import Spinner from './Spinner';
 const Movies = ({ setProgress, searchQuery = "" }) => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     const fetchMovies = async () => {
         setProgress(10);
         setLoading(true);
-        setError(null);
 
-        try {
-            // The original API is not working, using TMDB API as an alternative
-            // You'll need to sign up for an API key at https://www.themoviedb.org/
-            // Replace YOUR_API_KEY with your actual API key
-            const apiKey = process.env.REACT_APP_TMDB_API_KEY;
-            let url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery || "popular"}`;
-            
-            // If no search query, show popular movies instead
-            if (!searchQuery) {
-                url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
-            }
+        let url = `https://www.freetestapi.com/api/v1/movies?search=${searchQuery}`;
 
-            const response = await fetch(url);
-            setProgress(30);
+        const response = await fetch(url);
+        setProgress(30);
 
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status}`);
-            }
+        const data = await response.json();
+        setProgress(70);
 
-            const data = await response.json();
-            setProgress(70);
-
-            // Transform the data to match your existing movie card structure
-            const transformedData = data.results.map(movie => ({
-                id: movie.id,
-                title: movie.title,
-                year: new Date(movie.release_date).getFullYear(),
-                poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-                rating: movie.vote_average,
-                genre: movie.genre_ids, // Note: You'll need to map these IDs to genre names
-                plot: movie.overview,
-                actors: "Various", // TMDB doesn't include this in basic results
-                director: "Various", // TMDB doesn't include this in basic results
-                website: `https://www.themoviedb.org/movie/${movie.id}`
-            }));
-
-            setMovies(transformedData);
-            setLoading(false);
-            setProgress(100);
-        } catch (err) {
-            console.error("Error fetching movies:", err);
-            setError("Failed to load movies. Please try again later.");
-            setLoading(false);
-            setProgress(100);
-        }
+        setMovies(data);
+        setLoading(false);
+        setProgress(100);
     };
 
     useEffect(() => {
@@ -72,12 +36,6 @@ const Movies = ({ setProgress, searchQuery = "" }) => {
             </h1>
 
             {loading && <Spinner />}
-            
-            {error && (
-                <div className="alert alert-danger text-center" role="alert">
-                    {error}
-                </div>
-            )}
 
             <div className="container">
                 <div className="row justify-content-center">
@@ -112,6 +70,8 @@ const Movies = ({ setProgress, searchQuery = "" }) => {
         </>
     );
 };
+
+
 
 Movies.propTypes = {
     setProgress: PropTypes.func,
